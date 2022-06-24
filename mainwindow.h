@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
-#include "MyGraphicView.h"
+#include <QGraphicsScene>
+#include "grass.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +18,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    MyGraphicView *MyScene;
+    QGraphicsScene *scene; //график сцена
+    Grass *grass;//объект класса травы
 };
 #endif // MAINWINDOW_H

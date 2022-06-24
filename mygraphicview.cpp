@@ -1,5 +1,6 @@
 #include "MyGraphicView.h"
 #include "qwidget.h"
+#include "grass.h"
 
 MyGraphicView::MyGraphicView(QWidget *parent)
     : QGraphicsView(parent)
@@ -19,11 +20,10 @@ MyGraphicView::MyGraphicView(QWidget *parent)
     scene = new QGraphicsScene();   // Инициализируем сцену для отрисовки
     this->setScene(scene);          // Устанавливаем сцену в виджет
 
-    group_1 = new QGraphicsItemGroup(); // Инициализируем первую группу элементов
-    group_2 = new QGraphicsItemGroup(); // Инициализируем вторую группу элементов
 
-    scene->addItem(group_1);            // Добавляем первую группу в сцену
-    scene->addItem(group_2);            // Добавляем вторую группу в сцену
+
+   // scene->addItem(group_1);            // Добавляем первую группу в сцену
+  //  scene->addItem(group_2);            // Добавляем вторую группу в сцену
 
     timer = new QTimer();               // Инициализируем Таймер
     timer->setSingleShot(true);
@@ -39,11 +39,7 @@ MyGraphicView::~MyGraphicView()
 
 void MyGraphicView::slotAlarmTimer()
 {
-    /* Удаляем все элементы со сцены,
-     * если они есть перед новой отрисовкой
-     * */
-    this->deleteItemsFromGroup(group_1);
-    this->deleteItemsFromGroup(group_2);
+
 
     int width = this->width();      // определяем ширину нашего виджета
     int height = this->height();    // определяем высоту нашего виджета
@@ -59,42 +55,8 @@ void MyGraphicView::slotAlarmTimer()
     QPen penBlack(Qt::black); // Задаём чёрную кисть
     QPen penRed(Qt::red);   // Задаём красную кисть
 
-    /* Нарисуем черный прямоугольник
-     * */
-    group_1->addToGroup(scene->addLine(20,20, width - 20, 20, penBlack));
-    group_1->addToGroup(scene->addLine(width - 20, 20, width - 20, height -20, penBlack));
-    group_1->addToGroup(scene->addLine(width - 20, height -20, 20, height -20, penBlack));
-    group_1->addToGroup(scene->addLine(20, height -20, 20, 20, penBlack));
 
-    /* Нарисуем красный квадрат
-     * */
-    int sideOfSquare = (height > width) ? (width - 60) : (height - 60);
-    int centerOfWidget_X = width/2;
-    int centerOfWidget_Y = height/2;
 
-    group_2->addToGroup(scene->addLine(centerOfWidget_X - (sideOfSquare/2),
-                                       centerOfWidget_Y - (sideOfSquare/2),
-                                       centerOfWidget_X + (sideOfSquare/2),
-                                       centerOfWidget_Y - (sideOfSquare/2),
-                                       penRed));
-
-    group_2->addToGroup(scene->addLine(centerOfWidget_X + (sideOfSquare/2),
-                                       centerOfWidget_Y - (sideOfSquare/2),
-                                       centerOfWidget_X + (sideOfSquare/2),
-                                       centerOfWidget_Y + (sideOfSquare/2),
-                                       penRed));
-
-    group_2->addToGroup(scene->addLine(centerOfWidget_X + (sideOfSquare/2),
-                                       centerOfWidget_Y + (sideOfSquare/2),
-                                       centerOfWidget_X - (sideOfSquare/2),
-                                       centerOfWidget_Y + (sideOfSquare/2),
-                                       penRed));
-
-    group_2->addToGroup(scene->addLine(centerOfWidget_X - (sideOfSquare/2),
-                                       centerOfWidget_Y + (sideOfSquare/2),
-                                       centerOfWidget_X - (sideOfSquare/2),
-                                       centerOfWidget_Y - (sideOfSquare/2),
-                                       penRed));
 }
 
 /* Этим методом перехватываем событие изменения размера виджет
@@ -106,16 +68,4 @@ void MyGraphicView::resizeEvent(QResizeEvent *event)
 }
 
 
-/* Метод для удаления всех элементов из группы
- * */
-void MyGraphicView::deleteItemsFromGroup(QGraphicsItemGroup *group)
-{
-    /* Перебираем все элементы сцены, и если они принадлежат группе,
-     * переданной в метод, то удаляем их
-     * */
-    foreach( QGraphicsItem *item, scene->items(group->boundingRect())) {
-       if(item->group() == group ) {
-          delete item;
-       }
-    }
-}
+

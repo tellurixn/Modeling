@@ -26,8 +26,6 @@ private slots:
 
 private:
     QGraphicsScene      *scene;     // Объявляем сцену для отрисовки
-    QGraphicsItemGroup  *group_1;   // Объявляем первую группу элементов
-    QGraphicsItemGroup  *group_2;   // Объявляем вторую группу элементов
 
     /* Таймер для задержки отрисовки.
      * Дело в том, что при создании окна и виджета
@@ -35,17 +33,15 @@ private:
      * развернулся, чтобы принимать от него адекватные параметры
      * ширины и высоты
      * */
-    QTimer              *timer;
+   QTimer              *timer;
 
 private:
     /* Перегружаем событие изменения размера окна,
      * чтобы перехватывать его
      * */
     void resizeEvent(QResizeEvent *event);
-    /* Метод для удаления всех элементов
-     * из группы элементов
-     * */
-    void deleteItemsFromGroup(QGraphicsItemGroup *group_1);
+
+
 };
 
 #endif // MYGRAPHICVIEW\_H
