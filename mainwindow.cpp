@@ -1,7 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "grass.h"
+#include "hare.h"
 #include <QApplication>
+#include <cstdlib>
+
+static int randomBetween(int low, int high)
+{
+    return (rand() % ((high + 1) - low) + low);
+}
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,11 +38,18 @@ MainWindow::MainWindow(QWidget *parent)
     // Устанавливаем данную палитру
     qApp->setPalette(darkPalette);
 
+    //Подключение графической сцены
     scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
 
+    //Добавление травы на сцену
     grass = new Grass;
+    grass->setPos(randomBetween(30,700),randomBetween(10,300));
     scene->addItem(grass);
+
+    hare = new Hare;
+    hare->setPos(randomBetween(30,700),randomBetween(10,300));
+    scene->addItem(hare);
 
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);//сглыживаем линии
 }

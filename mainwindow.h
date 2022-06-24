@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "grass.h"
+#include "hare.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +20,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene; //график сцена
-    Grass *grass;//объект класса травы
+    Grass *grass;//объект класса трава
+    Hare *hare; //объект класса заяц
 };
 #endif // MAINWINDOW_H

@@ -1,15 +1,15 @@
-#ifndef GRASS_H
-#define GRASS_H
+#ifndef HARE_H
+#define HARE_H
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QObject>
 
-class Grass : public QObject,public QGraphicsItem{
+class Hare : public QObject,public QGraphicsItem{
     Q_OBJECT
 public:
-    Grass();
+    Hare();
 
  protected:
     /*Отрисовка элемента*/
@@ -17,7 +17,11 @@ public:
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
 private:
-    int amount;
+    int hunger;
+    int stamina;
+    int age;
+    char gender;
 };
 
-#endif // GRASS_H
+
+#endif // HARE_H
