@@ -30,9 +30,24 @@ Hare::Hare() : QObject(), QGraphicsItem(){
 
 }
 
+bool Hare::processCollidings(QList<QGraphicsItem *> collidins)
+{
+    bool can_eat = false;
+      for (QGraphicsItem* item: collidins) {
+        if (dynamic_cast<Grass*> (item)) {
+          can_eat = true;
+          //static_cast<Grass*>(item)->deleteLater();
+        }
+      }
+      return can_eat;
+}
+
 /*Отрисовка на графической сцене*/
 void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
     painter->setPen(Qt::NoPen);
 
     if(gender == 'm'){
@@ -43,9 +58,6 @@ void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
 
     painter->drawEllipse(0,0,10,10);
-
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
 
 }
 
@@ -68,12 +80,13 @@ QPainterPath Hare::shape() const
 void Hare::rest()
 {
     if (stamina<=100){
-        qDebug() << "Hare is resting now, stamina = " << this->stamina;
+        qDebug() << "Hare is resting now, stamina = " << this->stamina << " HP = " << this->hp;
         this->stamina +=5;
-        this->hunger --;}
+        this->hunger --;
+    }
     else{
-        delete hareTimer;
-        hareTimer = nullptr;
+        delete hareTimer;//удаление таймера
+        hareTimer = nullptr;//присвоить nullptr
     }
 }
 
@@ -83,27 +96,19 @@ void Hare::get_damage()
     if(hp>=5)
         this->hp -= 5;
     else
-        this->deleteLater();
+        this->deleteLater();//Заяц умирает при уровне здоровья 0
 }
 
-void Hare::status()
+void Hare::eat()
 {
-    if(stamina >=50 && hareTimer == nullptr){
-        qDebug() << "Hare is moving now, stamina = " << this->stamina;
-        emit this->move();
-
+    if (this->hunger <= 100 || this->hp <=100){
+        this->hunger += 20;
+        this->stamina += 15;
+        this->hp += 25;
     }
-    if(this->stamina <=49){
-        hareTimer = new QTimer;
-        connect(hareTimer,SIGNAL(timeout()),this,SLOT(rest()));
-        hareTimer->start(1000);
-       // qDebug() << "Hare is resting now, stamina = " << this->stamina;
-       // emit rest();
-
-    }
-    if(this->hunger <= 10){
-        qDebug() << "Hare is getting damage now, hp = " << this->hp;
-        emit this->get_damage();
+    else{
+        delete hareTimer;//удаление таймера
+        hareTimer = nullptr;//присвоить nullptr
     }
 }
 
@@ -129,8 +134,36 @@ void Hare::move()
     //установка новой позиции
     this->setPos(newPos);
     this->stamina -=5;
-    this->hunger--;
+    this->hunger-=3;
 
+}
 
+/*Постоянный опрос объекта о его статусе*/
+void Hare::status(){
+    /*двигаться если стамина больше 50 и заяц не отдыхает*/
+    if(stamina >=50 && hareTimer == nullptr){
+        qDebug() << "Hare is moving now, stamina = " << this->stamina << " HP = " << this->hp;
+        emit this->move();
+
+    }
+    /*отдых если стамина меньше 50*/
+    if(this->stamina <=49){
+        hareTimer = new QTimer;
+        connect(hareTimer,SIGNAL(timeout()),this,SLOT(rest()));
+        hareTimer->start(1000);
+    }
+    /*Если голод падает ниже 10 заяц каждую секунду теряет 5 хп*/
+    if(this->hunger <= 10){
+        qDebug() << "Hare is getting damage now, hp = " << this->hp;
+        emit this->get_damage();
+    }
+
+    QList<QGraphicsItem *> colliding = scene()->collidingItems(this);
+
+    if (processCollidings(colliding) == true && this->hunger <=50) {
+        hareTimer = new QTimer;
+        connect(hareTimer,SIGNAL(timeout()),this,SLOT(eat()));
+        hareTimer->start(1000);
+    }
 
 }

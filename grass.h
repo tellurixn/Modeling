@@ -6,8 +6,9 @@
 #include <QPainter>
 #include <QObject>
 
-class Grass : public QObject,public QGraphicsItem{
+class Grass : public QObject, public QGraphicsItem{
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 public:
     Grass();
 
@@ -18,6 +19,7 @@ public:
     QRectF boundingRect() const override;
 private:
     int amount;
+    QPainterPath shape() const override;
 };
 
 #endif // GRASS_H

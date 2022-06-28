@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 
-Grass::Grass() : QObject(), QGraphicsItem(){
+Grass::Grass() :  QGraphicsItem(){
 
     /*Если трава появилась впервые, кол-во = 1*/
     if(amount == NULL){
@@ -16,6 +16,8 @@ Grass::Grass() : QObject(), QGraphicsItem(){
 
 void Grass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     painter->setPen(Qt::NoPen);
     painter->setBrush(QColor(55,143,46));
     painter->drawEllipse(0,0,50,30);
@@ -26,4 +28,11 @@ void Grass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 QRectF Grass::boundingRect() const
 {
     return QRectF(0,0,50,30);
+}
+
+QPainterPath Grass::shape() const
+{
+    QPainterPath path;
+    path.addEllipse(boundingRect());
+    return path;
 }

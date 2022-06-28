@@ -10,6 +10,7 @@ class Hare : public QObject,public QGraphicsItem{
     Q_OBJECT
 public:
     Hare();
+    bool processCollidings(QList<QGraphicsItem *> collidins);
 
 
 protected:
@@ -31,6 +32,7 @@ public slots:
     void move();
     void rest();
     void get_damage();
+    void eat();
     void status();
 
 
