@@ -10,8 +10,7 @@ class Hare : public QObject,public QGraphicsItem{
     Q_OBJECT
 public:
     Hare();
-    void look_for_food();
-    bool processCollidings(QList<QGraphicsItem *> collidins);
+
 
 protected:
     /*Отрисовка элемента*/
@@ -19,15 +18,22 @@ protected:
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
 private:
-    int hunger;
-    int stamina;
-    int age;
-    char gender;
+    int hunger;//голод
+    int stamina;//выносливость
+    int age;//возраст
+    int hp;
+    char gender;//пол
+
+
     QPainterPath shape() const override;
     QTimer *hareTimer;
-private slots:
-    void debug();
+public slots:
     void move();
+    void rest();
+    void get_damage();
+    void status();
+
+
 };
 
 

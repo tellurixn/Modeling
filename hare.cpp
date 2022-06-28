@@ -14,6 +14,7 @@ static int randomBetween(int low, int high, int seed)
     return (rand() % ((high + 1) - low) + low);
 }
 
+/*Конструктор по умолчанию*/
 Hare::Hare() : QObject(), QGraphicsItem(){
     srand(time(NULL));
 
@@ -24,11 +25,12 @@ Hare::Hare() : QObject(), QGraphicsItem(){
     hunger = 100;
     stamina = 100;
     age = 0;
+    hp = 100;
+    hareTimer = nullptr;
 
 }
 
-
-
+/*Отрисовка на графической сцене*/
 void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(Qt::NoPen);
@@ -47,33 +49,73 @@ void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 }
 
+/*Возращение формы - прямоугольника*/
 QRectF Hare::boundingRect() const
 {
     return QRectF(0,0,10,10);
 }
 
+/*Возращение формы - эллипса*/
 QPainterPath Hare::shape() const
 {
     /*Функция возращает форму зайца в виде эллипса*/
     QPainterPath path;
     path.addEllipse(boundingRect());
     return path;
-
 }
 
-void Hare::debug()
+/*Покоиться*/
+void Hare::rest()
 {
-    qDebug() << "Slot is working";
-
+    if (stamina<=100){
+        qDebug() << "Hare is resting now, stamina = " << this->stamina;
+        this->stamina +=5;
+        this->hunger --;}
+    else{
+        delete hareTimer;
+        hareTimer = nullptr;
+    }
 }
 
+/*Получать урон*/
+void Hare::get_damage()
+{
+    if(hp>=5)
+        this->hp -= 5;
+    else
+        this->deleteLater();
+}
+
+void Hare::status()
+{
+    if(stamina >=50 && hareTimer == nullptr){
+        qDebug() << "Hare is moving now, stamina = " << this->stamina;
+        emit this->move();
+
+    }
+    if(this->stamina <=49){
+        hareTimer = new QTimer;
+        connect(hareTimer,SIGNAL(timeout()),this,SLOT(rest()));
+        hareTimer->start(1000);
+       // qDebug() << "Hare is resting now, stamina = " << this->stamina;
+       // emit rest();
+
+    }
+    if(this->hunger <= 10){
+        qDebug() << "Hare is getting damage now, hp = " << this->hp;
+        emit this->get_damage();
+    }
+}
+
+/*Передвигаться(рандомно)*/
 void Hare::move()
 {
-    QPointF oldPos = this->pos();
-    QPointF newPos;
 
-    newPos= QPointF(this->pos().x() + randomBetween(-20,20,QDateTime::currentMSecsSinceEpoch()), this->pos().y() + randomBetween(-20,20,QDateTime::currentSecsSinceEpoch()));
+    /*Рандомные новые координаты*/
+    QPointF newPos = QPointF(this->pos().x() + randomBetween(-20,20,QDateTime::currentMSecsSinceEpoch()), this->pos().y() + randomBetween(-20,20,QDateTime::currentSecsSinceEpoch()));
 
+    /*Ограничение по координатам
+    для предотвращения выхода за границы*/
     if(this->pos().x()>=700 || this->pos().y()>=300){
         newPos.setX(this->pos().x() - 30);
         newPos.setY(this->pos().y() - 10);
@@ -84,5 +126,11 @@ void Hare::move()
         newPos.setY(this->pos().y() + 10);
     }
 
-     this->setPos(newPos);
+    //установка новой позиции
+    this->setPos(newPos);
+    this->stamina -=5;
+    this->hunger--;
+
+
+
 }
