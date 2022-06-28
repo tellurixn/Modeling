@@ -20,7 +20,10 @@ public:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene; //график сцена
+    QTimer *timer;
     Grass *grass;//объект класса трава
     Hare *hare; //объект класса заяц
+
+
 };
 #endif // MAINWINDOW_H

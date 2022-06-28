@@ -4,9 +4,13 @@
 #include "hare.h"
 #include <QApplication>
 #include <cstdlib>
+#include <ctime>
+#include <QTimer>
+#include <QDateTime>
 
-static int randomBetween(int low, int high)
+static int randomBetween(int low, int high, int seed)
 {
+    srand(seed);
     return (rand() % ((high + 1) - low) + low);
 }
 
@@ -40,18 +44,30 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Подключение графической сцены
     scene = new QGraphicsScene();
+    scene->setSceneRect(20,10,680,280);
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     ui->graphicsView->setScene(scene);
+
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);//сглыживаем линии
+
+
 
     //Добавление травы на сцену
     grass = new Grass;
-    grass->setPos(randomBetween(30,700),randomBetween(10,300));
+    grass->setPos(randomBetween(30,700,QDateTime::currentMSecsSinceEpoch())
+                  ,randomBetween(10,300,QDateTime::currentMSecsSinceEpoch()));
     scene->addItem(grass);
 
     hare = new Hare;
-    hare->setPos(randomBetween(30,700),randomBetween(10,300));
+    hare->setPos(randomBetween(30,700,QDateTime::currentSecsSinceEpoch())
+                 ,randomBetween(10,300,QDateTime::currentSecsSinceEpoch()));
     scene->addItem(hare);
 
-    ui->graphicsView->setRenderHint(QPainter::Antialiasing);//сглыживаем линии
+    timer = new QTimer;
+    connect(timer,SIGNAL(timeout()),hare,SLOT(move()));
+    timer->start(1000);
+
+
 }
 
 MainWindow::~MainWindow()

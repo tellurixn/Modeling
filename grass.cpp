@@ -25,5 +25,5 @@ void Grass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 QRectF Grass::boundingRect() const
 {
-    return QRectF(0,0,50,50);
+    return QRectF(0,0,50,30);
 }
