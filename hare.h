@@ -24,6 +24,7 @@ private:
     int age;//возраст
     int hp;
     char gender;//пол
+    QPoint lastFood;
 
 
     QPainterPath shape() const override;
@@ -33,6 +34,7 @@ public slots:
     void rest();
     void get_damage();
     void eat();
+    void moveForFood();
     void status();
 
 

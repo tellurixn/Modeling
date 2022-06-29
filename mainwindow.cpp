@@ -55,14 +55,14 @@ MainWindow::MainWindow(QWidget *parent)
     //Добавление травы на сцену
     grass = new Grass[10];
     for(int i = 0; i<10;i++){
-    grass[i].setPos(randomBetween(30,700,rand())
-                  ,randomBetween(10,280,rand()));
+    grass[i].setPos(randomBetween(30,650,rand())
+                  ,randomBetween(10,250,rand()));
     scene->addItem(&grass[i]);
 
     }
     hare = new Hare;
-    hare->setPos(randomBetween(30,700,QDateTime::currentSecsSinceEpoch())
-                 ,randomBetween(10,280,QDateTime::currentSecsSinceEpoch()));
+    hare->setPos(randomBetween(30,650,QDateTime::currentSecsSinceEpoch())
+                 ,randomBetween(10,250,QDateTime::currentSecsSinceEpoch()));
     scene->addItem(hare);
 
     timer = new QTimer;
