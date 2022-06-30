@@ -4,9 +4,11 @@
 #include <QGraphicsScene>
 #include "grass.h"
 #include "hare.h"
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
+
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -22,7 +24,7 @@ private:
     QGraphicsScene *scene; //график сцена
     QTimer *timer;
     Grass *grass;//объект класса трава
-    Hare *hare; //объект класса заяц
+    std::vector <Hare*> hare; //вектор объектов класса заяц
 
 
 };

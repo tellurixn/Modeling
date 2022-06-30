@@ -7,6 +7,7 @@
 #include <ctime>
 #include <QTimer>
 #include <QDateTime>
+#include <QVector>
 
 static int randomBetween(int low, int high, int seed)
 {
@@ -50,7 +51,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);//сглыживаем линии
 
-
+    //Создание таймера для сцены
+    timer = new QTimer;
 
     //Добавление травы на сцену
     grass = new Grass[10];
@@ -58,17 +60,29 @@ MainWindow::MainWindow(QWidget *parent)
     grass[i].setPos(randomBetween(30,650,rand())
                   ,randomBetween(10,250,rand()));
     scene->addItem(&grass[i]);
+    }
+
+    //Добвление зайцев на сцену
+
+    for(int i = 0; i<5;i++){
+    auto newhare = new Hare();
+    hare.push_back(newhare);
+
+    hare[i]->setPos(randomBetween(30,650,rand())
+                 ,randomBetween(10,250,rand()));
+
+    scene->addItem(hare[i]);
+
+    //Коннект таймаута таймера со слотом status зайцев
+    connect(timer,SIGNAL(timeout()),hare[i],SLOT(status()));
 
     }
-    hare = new Hare;
-    hare->setPos(randomBetween(30,650,QDateTime::currentSecsSinceEpoch())
-                 ,randomBetween(10,250,QDateTime::currentSecsSinceEpoch()));
-    scene->addItem(hare);
 
-    timer = new QTimer;
-    connect(timer,SIGNAL(timeout()),hare,SLOT(status()));
 
+    //Запуск таймера
     timer->start(1000);
+
+
 
 
 }
@@ -77,4 +91,5 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 

@@ -1,5 +1,6 @@
 #include "hare.h"
 #include "grass.h"
+#include "mainwindow.h"
 #include "qgraphicsscene.h"
 #include <QGraphicsEllipseItem>
 #include <cstdlib>
@@ -9,6 +10,7 @@
 #include <QDateTime>
 #include <QVector2D>
 
+int Hare::newUID = 0;
 static int randomBetween(int low, int high, int seed)
 {
     srand(seed);
@@ -16,12 +18,12 @@ static int randomBetween(int low, int high, int seed)
 }
 
 /*Конструктор по умолчанию*/
-Hare::Hare() : QObject(), QGraphicsItem(){
+/*Hare::Hare() : QObject(), QGraphicsItem(){
     srand(time(NULL));
 
     char gndr[2]={'m','f'};
-    int random = rand()%2;
-    gender = gndr[random];
+    int random = randomBetween(0,1,rand());
+    gender = &gndr[random];
 
     hunger = 100;
     stamina = 100;
@@ -29,6 +31,21 @@ Hare::Hare() : QObject(), QGraphicsItem(){
     hp = 100;
 
     hareTimer = nullptr;
+
+}*/
+
+Hare::Hare(QObject *parent) : QObject(parent)  , uid(newUID++)
+{
+
+    hunger = 100;
+    stamina = 100;
+    age = 0;
+    hp = 100;
+}
+
+Hare::~Hare()
+{
+
 
 }
 
@@ -46,6 +63,11 @@ bool Hare::processCollidings(QList<QGraphicsItem *> collidins)
       return can_eat;
 }
 
+int Hare::GetUid()
+{
+    return uid;
+}
+
 /*Отрисовка на графической сцене*/
 void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -54,12 +76,7 @@ void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     painter->setPen(Qt::NoPen);
 
-    if(gender == 'm'){
-        painter->setBrush(QColor(128,128,128));
-    }
-    else{
-        painter->setBrush(QColor(Qt::white));
-    }
+    painter->setBrush(QColor(Qt::white));
 
     painter->drawEllipse(0,0,10,10);
 
@@ -80,16 +97,17 @@ QPainterPath Hare::shape() const
     return path;
 }
 
+
 /*Покоиться*/
 void Hare::rest()
 {
     if (stamina<100){
-        qDebug() << "Hare is resting now, stamina = " << this->stamina
-                 << " HP = " << this->hp << " Hunger = " << this->hunger;
-        this->stamina +=5;
-        this->hunger -2;
-        if (this->hunger<=0)
-            this->hunger = 0;
+        qDebug() << "Hare is resting now, stamina = " << stamina
+                 << " HP = " << hp << " Hunger = " << hunger;
+        stamina +=5;
+        hunger -=20;
+        if (hunger<=0)
+            hunger = 0;
     }
     else{
         delete hareTimer;//удаление таймера
@@ -101,28 +119,30 @@ void Hare::rest()
 void Hare::get_damage()
 {
     if(hp>=5)
-        this->hp -= 5;
-    else
-        this->deleteLater();//Заяц умирает при уровне здоровья 0
+        hp -= 5;
+    else{
+        hp = 0;
+        qDebug() << "Hare ID" << GetUid()<< " is dead.";
+        this->deleteLater();
+    }
 }
 
 void Hare::eat()
 {
-    if (this->hunger < 100 || this->hp <100){
-        this->hunger += 20;
-        this->stamina += 15;
-        this->hp += 25;
+    if (hunger < 100){
+        hunger += 20;
+        stamina += 15;
+        hp += 25;
 
-        if(this->hunger > 100)
-            this->hunger = 100;
-        if(this->stamina > 100)
-            this->stamina = 100;
-        if(this->hp > 100)
-            this->hp = 100;
+        if(hunger>100)
+            hunger = 100;
+        if(stamina>100)
+            stamina = 100;
+        if(hp>100)
+            hp = 100;
 
     }
     else{
-
         delete hareTimer;//удаление таймера
         hareTimer = nullptr;//присвоить nullptr
     }
@@ -130,23 +150,28 @@ void Hare::eat()
 
 void Hare::moveForFood()
 {
-    QVector2D v1(this->pos().x(),this->pos().y());
-    QVector2D v2(this->lastFood.x(),this->lastFood.y());
+    QVector2D v1(pos().x(),pos().y());
+    QVector2D v2(lastFood.x(),lastFood.y());
     if(v1.distanceToPoint(v2) != 0){
-         qDebug() << "Hare is moving for food now, stamina = " << this->stamina
-                  << " HP = " << this->hp << " Hunger = " << this->hunger;
+         qDebug() << "Hare is moving for food now, stamina = " << stamina
+                  << " HP = " << hp << " Hunger = " << hunger;
         if(v1.x()!= v2.x()){
             if(v2.x()<v1.x())
-                this->setX(this->pos().x() - 1);
+                setX(pos().x() - 1);
             else
-                this->setX(this->pos().x() + 1);
+                setX(pos().x() + 1);
         }
         if(v1.y()!=v2.y()){
             if(v2.y()<v1.y())
-                this->setY(this->pos().y() - 1);
+                setY(pos().y() - 1);
             else
-                this->setY(this->pos().y() + 1);
+                setY(pos().y() + 1);
         }
+
+        stamina -=2;
+        hunger-=2;
+        if (hunger<=0)
+            hunger = 0;
     }
     else{
         delete hareTimer;//удаление таймера
@@ -159,63 +184,67 @@ void Hare::move()
 {
 
     /*Рандомные новые координаты*/
-    QPointF newPos = QPointF(this->pos().x() + randomBetween(-20,20,QDateTime::currentMSecsSinceEpoch()), this->pos().y() + randomBetween(-20,20,QDateTime::currentSecsSinceEpoch()));
+    QPointF newPos = QPointF(pos().x() + randomBetween(-20,20,rand()), pos().y() + randomBetween(-20,20,rand()));
 
     /*Ограничение по координатам
     для предотвращения выхода за границы*/
-    if(this->pos().x()>=700 || this->pos().y()>=300){
-        newPos.setX(this->pos().x() - 30);
-        newPos.setY(this->pos().y() - 10);
+    if(pos().x()>=700 || pos().y()>=300){
+        newPos.setX(pos().x() - 30);
+        newPos.setY(pos().y() - 10);
 
     }
-    else if(this->pos().x()<=30 || this->pos().y()<=10){
-        newPos.setX(this->pos().x() + 30);
-        newPos.setY(this->pos().y() + 10);
+    else if(pos().x()<=30 || pos().y()<=10){
+        newPos.setX(pos().x() + 30);
+        newPos.setY(pos().y() + 10);
     }
 
     //установка новой позиции
-    this->setPos(newPos);
-    this->stamina -=5;
-    this->hunger-=2;
-    if (this->hunger<=0)
-        this->hunger = 0;
+    setPos(newPos);
+    stamina -=5;
+    hunger-=5;
+    if (hunger<=0)
+        hunger = 0;
 
 }
 
 /*Постоянный опрос объекта о его статусе*/
 void Hare::status(){
+    int random = randomBetween(50,85,rand());
+
+
     /*двигаться если стамина больше 50 и заяц не отдыхает*/
-    if(stamina >=50 && hareTimer == nullptr){
-        qDebug() << "Hare is moving now, stamina = " << this->stamina
-                 << " HP = " << this->hp << " Hunger = " << this->hunger;
-        emit this->move();
+    if(stamina >=random && hareTimer == nullptr){
+        qDebug() << "Hare is moving now, stamina = " << stamina
+                 << " HP = " << hp << " Hunger = " << hunger;
+        emit move();
 
     }
     /*отдых если стамина меньше 50*/
-    if(this->stamina <=49){
+    if(stamina < random){
         hareTimer = new QTimer;
         connect(hareTimer,SIGNAL(timeout()),this,SLOT(rest()));
         hareTimer->start(1000);
     }
     /*Если голод падает ниже 10 заяц каждую секунду теряет 5 хп*/
-    if(this->hunger <= 10){
+    if(hunger <= 10){
         qDebug() << "Hare is getting damage now, hp = "
-                 << this->hp << " Hunger = " << this->hunger;
-        emit this->get_damage();
+                 << hp << " Hunger = " << hunger;
+        emit get_damage();
     }
 
     QList<QGraphicsItem *> colliding = scene()->collidingItems(this);
 
-    if (processCollidings(colliding) == true && this->hunger <=50) {
+    if (processCollidings(colliding) == true && hunger <=50) {
         hareTimer = new QTimer;
         connect(hareTimer,SIGNAL(timeout()),this,SLOT(eat()));
         hareTimer->start(1000);
     }
-    if (this->hunger <=55 && this->lastFood.isNull() == false){
+    if (hunger <=50 && lastFood.isNull() == false){
         hareTimer = new QTimer;
         connect(hareTimer,SIGNAL(timeout()),this,SLOT(moveForFood()));
-        hareTimer->start(1000);
+        hareTimer->start(500);
     }
+
 
 
 }

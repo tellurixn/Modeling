@@ -6,11 +6,15 @@
 #include <QPainter>
 #include <QObject>
 
-class Hare : public QObject,public QGraphicsItem{
+class Hare : public QObject, public QGraphicsItem{
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 public:
-    Hare();
+    explicit Hare(QObject *parent = 0);
+    ~Hare();
     bool processCollidings(QList<QGraphicsItem *> collidins);
+    int GetUid();
+
 
 
 protected:
@@ -19,16 +23,17 @@ protected:
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
 private:
+    static int newUID;
+    const int uid;
     int hunger;//голод
     int stamina;//выносливость
     int age;//возраст
     int hp;
-    char gender;//пол
+    char *gender;//пол
     QPoint lastFood;
-
-
     QPainterPath shape() const override;
     QTimer *hareTimer;
+
 public slots:
     void move();
     void rest();
@@ -36,7 +41,6 @@ public slots:
     void eat();
     void moveForFood();
     void status();
-
 
 };
 
