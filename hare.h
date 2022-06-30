@@ -14,9 +14,6 @@ public:
     ~Hare();
     bool processCollidings(QList<QGraphicsItem *> collidins);
     int GetUid();
-
-
-
 protected:
     /*Отрисовка элемента*/
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
@@ -25,11 +22,9 @@ protected:
 private:
     static int newUID;
     const int uid;
-    int hunger;//голод
-    int stamina;//выносливость
-    int age;//возраст
+    double hunger;//голод
+    double stamina;//выносливость
     int hp;
-    char *gender;//пол
     QPoint lastFood;
     QPainterPath shape() const override;
     QTimer *hareTimer;

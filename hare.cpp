@@ -11,6 +11,7 @@
 #include <QVector2D>
 
 int Hare::newUID = 0;
+
 static int randomBetween(int low, int high, int seed)
 {
     srand(seed);
@@ -18,37 +19,22 @@ static int randomBetween(int low, int high, int seed)
 }
 
 /*Конструктор по умолчанию*/
-/*Hare::Hare() : QObject(), QGraphicsItem(){
-    srand(time(NULL));
-
-    char gndr[2]={'m','f'};
-    int random = randomBetween(0,1,rand());
-    gender = &gndr[random];
-
-    hunger = 100;
-    stamina = 100;
-    age = 0;
-    hp = 100;
-
-    hareTimer = nullptr;
-
-}*/
-
 Hare::Hare(QObject *parent) : QObject(parent)  , uid(newUID++)
 {
 
     hunger = 100;
     stamina = 100;
-    age = 0;
     hp = 100;
 }
 
+/*Деструктор*/
 Hare::~Hare()
 {
 
 
 }
 
+/*Обнаружение коллизий*/
 bool Hare::processCollidings(QList<QGraphicsItem *> collidins)
 {
     bool can_eat = false;
@@ -63,6 +49,7 @@ bool Hare::processCollidings(QList<QGraphicsItem *> collidins)
       return can_eat;
 }
 
+/*Получить ID зайца*/
 int Hare::GetUid()
 {
     return uid;
@@ -97,15 +84,14 @@ QPainterPath Hare::shape() const
     return path;
 }
 
-
 /*Покоиться*/
 void Hare::rest()
 {
     if (stamina<100){
         qDebug() << "Hare is resting now, stamina = " << stamina
                  << " HP = " << hp << " Hunger = " << hunger;
-        stamina +=5;
-        hunger -=20;
+        stamina += 1;
+        hunger -= 0.5;
         if (hunger<=0)
             hunger = 0;
     }
@@ -127,6 +113,7 @@ void Hare::get_damage()
     }
 }
 
+/*Кушать*/
 void Hare::eat()
 {
     if (hunger < 100){
@@ -148,6 +135,7 @@ void Hare::eat()
     }
 }
 
+/*Двигаться к месту последнего приема пищи*/
 void Hare::moveForFood()
 {
     QVector2D v1(pos().x(),pos().y());
@@ -168,8 +156,8 @@ void Hare::moveForFood()
                 setY(pos().y() + 1);
         }
 
-        stamina -=2;
-        hunger-=2;
+        stamina -=0.2;
+        hunger -= 0.2;
         if (hunger<=0)
             hunger = 0;
     }
@@ -184,24 +172,25 @@ void Hare::move()
 {
 
     /*Рандомные новые координаты*/
-    QPointF newPos = QPointF(pos().x() + randomBetween(-20,20,rand()), pos().y() + randomBetween(-20,20,rand()));
+    QPointF newPos = QPointF(pos().x() + randomBetween(-10,10,rand()),
+                             pos().y() + randomBetween(-10,10,rand()));
 
     /*Ограничение по координатам
     для предотвращения выхода за границы*/
-    if(pos().x()>=700 || pos().y()>=300){
-        newPos.setX(pos().x() - 30);
-        newPos.setY(pos().y() - 10);
+    if(pos().x()>=650 || pos().y()>=280){
+        newPos.setX(pos().x() - 15);
+        newPos.setY(pos().y() - 15);
 
     }
     else if(pos().x()<=30 || pos().y()<=10){
-        newPos.setX(pos().x() + 30);
-        newPos.setY(pos().y() + 10);
+        newPos.setX(pos().x() + 15);
+        newPos.setY(pos().y() + 15);
     }
 
     //установка новой позиции
     setPos(newPos);
-    stamina -=5;
-    hunger-=5;
+    stamina -=0.5;
+    hunger -= 0.5;
     if (hunger<=0)
         hunger = 0;
 
@@ -223,7 +212,7 @@ void Hare::status(){
     if(stamina < random){
         hareTimer = new QTimer;
         connect(hareTimer,SIGNAL(timeout()),this,SLOT(rest()));
-        hareTimer->start(1000);
+        hareTimer->start(500);
     }
     /*Если голод падает ниже 10 заяц каждую секунду теряет 5 хп*/
     if(hunger <= 10){
@@ -237,7 +226,7 @@ void Hare::status(){
     if (processCollidings(colliding) == true && hunger <=50) {
         hareTimer = new QTimer;
         connect(hareTimer,SIGNAL(timeout()),this,SLOT(eat()));
-        hareTimer->start(1000);
+        hareTimer->start(500);
     }
     if (hunger <=50 && lastFood.isNull() == false){
         hareTimer = new QTimer;

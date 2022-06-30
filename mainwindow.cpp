@@ -55,8 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer;
 
     //Добавление травы на сцену
-    grass = new Grass[10];
-    for(int i = 0; i<10;i++){
+    grass = new Grass[25];
+    for(int i = 0; i<25;i++){
     grass[i].setPos(randomBetween(30,650,rand())
                   ,randomBetween(10,250,rand()));
     scene->addItem(&grass[i]);
@@ -80,10 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     //Запуск таймера
-    timer->start(1000);
-
-
-
+    timer->start(500);
 
 }
 

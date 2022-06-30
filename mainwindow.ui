@@ -98,8 +98,17 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QGraphicsView{
-rgb(94, 52, 9)
+rgb(17, 67, 11)
 }</string>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>8</red>
+       <green>57</green>
+       <blue>7</blue>
+      </color>
+     </brush>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
