@@ -24,7 +24,7 @@ private:
     QGraphicsScene *scene; //график сцена
     QTimer *timer;
     Grass *grass;//объект класса трава
-    std::vector <Hare*> hare; //вектор объектов класса заяц
+    std::vector <Hare*> hares; //вектор объектов класса заяц
 
 
 };

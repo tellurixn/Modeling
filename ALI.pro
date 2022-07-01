@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     grass.cpp \
     hare.cpp \
+    herbivores.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     grass.h \
     hare.h \
+    herbivores.h \
     mainwindow.h
 
 FORMS += \

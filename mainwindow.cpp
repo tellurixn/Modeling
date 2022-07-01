@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "grass.h"
-#include "hare.h"
+#include "herbivores.h"
 #include <QApplication>
 #include <cstdlib>
 #include <ctime>
@@ -65,16 +65,16 @@ MainWindow::MainWindow(QWidget *parent)
     //Добвление зайцев на сцену
 
     for(int i = 0; i<5;i++){
-    auto newhare = new Hare();
-    hare.push_back(newhare);
+    auto newHare = new Hare();
+    hares.push_back(newHare);
 
-    hare[i]->setPos(randomBetween(30,650,rand())
+    hares[i]->setPos(randomBetween(30,650,rand())
                  ,randomBetween(10,250,rand()));
 
-    scene->addItem(hare[i]);
+    scene->addItem(hares[i]);
 
     //Коннект таймаута таймера со слотом status зайцев
-    connect(timer,SIGNAL(timeout()),hare[i],SLOT(status()));
+    connect(timer,SIGNAL(timeout()),hares[i],SLOT(status()));
 
     }
 

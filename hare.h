@@ -1,43 +1,19 @@
 #ifndef HARE_H
 #define HARE_H
 
-#include <QGraphicsEllipseItem>
-#include <QGraphicsItem>
-#include <QPainter>
-#include <QObject>
+#include "herbivores.h"
 
-class Hare : public QObject, public QGraphicsItem{
-    Q_OBJECT
-    Q_INTERFACES(QGraphicsItem)
+class Hare : public Herbivores
+{
 public:
-    explicit Hare(QObject *parent = 0);
+    Hare();
     ~Hare();
-    bool processCollidings(QList<QGraphicsItem *> collidins);
-    int GetUid();
+     QPainterPath shape() const override;
 protected:
     /*Отрисовка элемента*/
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
-private:
-    static int newUID;
-    const int uid;
-    double hunger;//голод
-    double stamina;//выносливость
-    int hp;
-    QPoint lastFood;
-    QPainterPath shape() const override;
-    QTimer *hareTimer;
-
-public slots:
-    void move();
-    void rest();
-    void get_damage();
-    void eat();
-    void moveForFood();
-    void status();
-
 };
-
 
 #endif // HARE_H
