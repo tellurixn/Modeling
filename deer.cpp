@@ -1,4 +1,5 @@
 #include "deer.h"
+#include "predator.h"
 
 Deer::Deer()
 {
@@ -26,7 +27,6 @@ void Deer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
        соизмеримо текущему здоровью
        относительно максимального здоровья
     */
-
       painter->setBrush(Qt::red);
       painter->drawRect(-2,-6, (int) 20*hp/100,3);
 }

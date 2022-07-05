@@ -36,7 +36,7 @@ public slots:
     void move();
     void rest();
     void get_damage();
-    void eat();
+    void eat(QList<QGraphicsItem *> colliding);
     void status();
 };
 

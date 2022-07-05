@@ -43,19 +43,9 @@ bool Predator::processCollidings(QList<QGraphicsItem *> collidins)
       for (QGraphicsItem* item: collidins) {
           if (dynamic_cast<Hare*> (item)){
               can_eat = true;
-              hunger+=20;
-              if(hunger>100)
-                  hunger = 100;
-              static_cast<Hare*> (item)->deleteLater();
-              qDebug() << "Predator with ID = " << GetUid() << " eat hare";
           }
           if (dynamic_cast<Deer*> (item)){
               can_eat = true;
-              hunger += 50;
-              if(hunger>100)
-                  hunger = 100;
-              static_cast<Deer*> (item)->deleteLater();
-              qDebug() << "Predator with ID = " << GetUid() << " eat deer";
           }
       }
       return can_eat;
@@ -136,9 +126,36 @@ void Predator::get_damage()
     }
 }
 
-void Predator::eat()
+void Predator::eat(QList<QGraphicsItem *> colliding)
 {
-    qDebug() << "Someone eaten";
+    for (QGraphicsItem* item: colliding) {
+        if (dynamic_cast<Hare*> (item)){
+            hp -=20;
+            if(hp<=0){
+                this->deleteLater();
+                return;
+            }
+            hunger+=20;
+            if(hunger>100)
+               hunger = 100;
+
+            static_cast<Hare*> (item)->deleteLater();
+            qDebug() << "Predator with ID = " << GetUid() << " eat hare";
+        }
+        if (dynamic_cast<Deer*> (item)){
+            hp -= 40;
+            if(hp<=0){
+                this->deleteLater();
+                return;
+            }
+            hunger += 50;
+            if(hunger>100)
+                hunger = 100;
+
+            static_cast<Deer*> (item)->deleteLater();
+            qDebug() << "Predator with ID = " << GetUid() << " eat deer";
+        }
+    }
 }
 
 void Predator::status()
@@ -166,7 +183,7 @@ void Predator::status()
     }
 
     if (processCollidings(colliding) == true) {
-        eat();
+        eat(colliding);
     }
 
 }
