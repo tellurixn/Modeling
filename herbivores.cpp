@@ -66,6 +66,7 @@ void Herbivores::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
     painter->drawEllipse(0,0,20,20);
 
+
 }
 
 /*Возращение формы - прямоугольника*/
@@ -79,8 +80,8 @@ QRectF Herbivores::boundingRect() const
 void Herbivores::rest()
 {
     if (stamina<100){
-        qDebug() << "Herbivores is resting now, stamina = " << stamina
-                 << " HP = " << hp << " Hunger = " << hunger;
+      //  qDebug() << "Herbivores is resting now, stamina = " << stamina
+         //        << " HP = " << hp << " Hunger = " << hunger;
         stamina += 1;
         hunger -= 0.5;
         if (hunger<=0)
@@ -99,7 +100,7 @@ void Herbivores::get_damage()
         hp -= 5;
     else{
         hp = 0;
-        qDebug() << "Herbivores ID" << GetUid()<< " is dead.";
+       // qDebug() << "Herbivores ID" << GetUid()<< " is dead.";
         this->deleteLater();
     }
 }
@@ -132,8 +133,8 @@ void Herbivores::moveForFood()
     QVector2D v1(pos().x(),pos().y());
     QVector2D v2(lastFood.x(),lastFood.y());
     if(v1.distanceToPoint(v2) != 0){
-         qDebug() << "Herbivores is moving for food now, stamina = " << stamina
-                  << " HP = " << hp << " Hunger = " << hunger;
+       //  qDebug() << "Herbivores is moving for food now, stamina = " << stamina
+           //       << " HP = " << hp << " Hunger = " << hunger;
         if(v1.x()!= v2.x()){
             if(v2.x()<v1.x())
                 setX(pos().x() - 1);
@@ -194,8 +195,8 @@ void Herbivores::status(){
 
     /*двигаться если стамина больше 50 и заяц не отдыхает*/
     if(stamina >=random && HerbivoresTimer == nullptr){
-        qDebug() << "Herbivores is moving now, stamina = " << stamina
-                 << " HP = " << hp << " Hunger = " << hunger;
+       // qDebug() << "Herbivores is moving now, stamina = " << stamina
+         //        << " HP = " << hp << " Hunger = " << hunger;
         emit move();
 
     }
@@ -207,8 +208,8 @@ void Herbivores::status(){
     }
     /*Если голод падает ниже 10 каждую секунду теряет 5 хп*/
     if(hunger <= 10){
-        qDebug() << "Herbivores is getting damage now, hp = "
-                 << hp << " Hunger = " << hunger;
+       // qDebug() << "Herbivores is getting damage now, hp = "
+         //       << hp << " Hunger = " << hunger;
         emit get_damage();
     }
 

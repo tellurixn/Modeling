@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     //Добвление зайцев на сцену
-
     for(int i = 0; i<5;i++){
     auto newHare = new Hare();
     hares.push_back(newHare);
@@ -75,9 +74,36 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Коннект таймаута таймера со слотом status зайцев
     connect(timer,SIGNAL(timeout()),hares[i],SLOT(status()));
-
     }
 
+    //Добвление оленей на сцену
+    for(int i = 0; i<5;i++){
+    auto newDeer = new Deer();
+    deers.push_back(newDeer);
+
+    deers[i]->setPos(randomBetween(30,650,rand())
+                 ,randomBetween(10,250,rand()));
+
+    scene->addItem(deers[i]);
+
+    //Коннект таймаута таймера со слотом status оленей
+    connect(timer,SIGNAL(timeout()),deers[i],SLOT(status()));
+    }
+
+
+    //Добвление хищников на сцену
+    for(int i = 0; i<5;i++){
+    auto newWolf = new Predator();
+    wolfs.push_back(newWolf);
+
+    wolfs[i]->setPos(randomBetween(30,650,rand())
+                 ,randomBetween(10,250,rand()));
+
+    scene->addItem(wolfs[i]);
+
+    //Коннект таймаута таймера со слотом status оленей
+    connect(timer,SIGNAL(timeout()),wolfs[i],SLOT(status()));
+    }
 
     //Запуск таймера
     timer->start(500);

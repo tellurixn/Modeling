@@ -9,17 +9,21 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    deer.cpp \
     grass.cpp \
     hare.cpp \
     herbivores.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    predator.cpp
 
 HEADERS += \
+    deer.h \
     grass.h \
     hare.h \
     herbivores.h \
-    mainwindow.h
+    mainwindow.h \
+    predator.h
 
 FORMS += \
     mainwindow.ui

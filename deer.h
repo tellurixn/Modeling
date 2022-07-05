@@ -1,13 +1,14 @@
-#ifndef HARE_H
-#define HARE_H
+#ifndef DEER_H
+#define DEER_H
 
 #include "herbivores.h"
 
-class Hare : public Herbivores
+class Deer : public Herbivores
 {
+    Q_OBJECT
 public:
-    Hare();
-    ~Hare();
+    Deer();
+    ~Deer();
     QPainterPath shape() const override;
 protected:
     /*Отрисовка элемента*/
@@ -16,4 +17,4 @@ protected:
     QRectF boundingRect() const override;
 };
 
-#endif // HARE_H
+#endif // DEER_H

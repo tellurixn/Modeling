@@ -4,6 +4,8 @@
 #include <QGraphicsScene>
 #include "grass.h"
 #include "hare.h"
+#include "deer.h"
+#include "predator.h"
 #include <vector>
 
 QT_BEGIN_NAMESPACE
@@ -25,6 +27,8 @@ private:
     QTimer *timer;
     Grass *grass;//объект класса трава
     std::vector <Hare*> hares; //вектор объектов класса заяц
+    std::vector <Deer*> deers; //вектор объектов класса заяц
+    std::vector <Predator*> wolfs; //вектор объектов класса заяц
 
 
 };
