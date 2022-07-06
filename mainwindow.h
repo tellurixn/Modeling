@@ -20,7 +20,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+public slots:
+    void updateHareText();
+    void updateDeerText();
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene; //график сцена

@@ -2,6 +2,8 @@
 #include "hare.h"
 #include "deer.h"
 #include "qgraphicsscene.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 #include <QTimer>
 #include <QGraphicsEllipseItem>
 #include <cstdlib>
@@ -141,6 +143,7 @@ void Predator::eat(QList<QGraphicsItem *> colliding)
 
             static_cast<Hare*> (item)->deleteLater();
             qDebug() << "Predator with ID = " << GetUid() << " eat hare";
+            emit hareEaten();
         }
         if (dynamic_cast<Deer*> (item)){
             hp -= 40;
@@ -154,6 +157,7 @@ void Predator::eat(QList<QGraphicsItem *> colliding)
 
             static_cast<Deer*> (item)->deleteLater();
             qDebug() << "Predator with ID = " << GetUid() << " eat deer";
+            emit deerEaten();
         }
     }
 }
@@ -161,17 +165,17 @@ void Predator::eat(QList<QGraphicsItem *> colliding)
 void Predator::status()
 {
     qDebug() << "Predator ID = " << GetUid() << " status cheack";
-   // int random = randomBetween(50,85,rand());
+    int random = randomBetween(50,85,rand());
     QList<QGraphicsItem *> colliding = scene()->collidingItems(this);
 
     /*двигаться если стамина больше 50 и хищник не отдыхает*/
-    if(stamina >=50 && predatorTimer == nullptr){
+    if(stamina >=random && predatorTimer == nullptr){
         qDebug() << "Predator with ID = " << GetUid() << " is moving";
         move();
 
     }
     /*отдых если стамина меньше 50*/
-    if(stamina < 50){
+    if(stamina < random){
         predatorTimer = new QTimer;
         connect(predatorTimer,SIGNAL(timeout()),this,SLOT(rest()));
         predatorTimer->start(500);

@@ -31,7 +31,9 @@ protected:
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
-
+signals:
+    void deerEaten();
+    void hareEaten();
 public slots:
     void move();
     void rest();

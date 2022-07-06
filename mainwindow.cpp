@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QVector>
+#include <QLineEdit>
 
 static int randomBetween(int low, int high, int seed)
 {
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->HareText->setText("0");
+    ui->DeerText->setText("0");
     // Создаём палитру для тёмной темы оформления
     QPalette darkPalette;
 
@@ -101,9 +104,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     scene->addItem(wolfs[i]);
 
-    //Коннект таймаута таймера со слотом status оленей
+    //Коннект таймаута таймера со слотом status волков
     connect(timer,SIGNAL(timeout()),wolfs[i],SLOT(status()));
+    connect(wolfs[i],SIGNAL(hareEaten()),this,SLOT(updateHareText()));
+    connect(wolfs[i],SIGNAL(deerEaten()),this,SLOT(updateDeerText()));
     }
+
 
     //Запуск таймера
     timer->start(500);
@@ -114,5 +120,29 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::updateHareText()
+{
+   QString old = ui->HareText->text();
+
+   int newVal = old.toInt() + 1;
+
+   QString NEWVAL = QString::number(newVal);
+
+   ui->HareText->setText(NEWVAL);
+}
+
+void MainWindow::updateDeerText()
+{
+    QString old = ui->DeerText->text();
+
+    int newVal = old.toInt() + 1;
+
+    QString NEWVAL = QString::number(newVal);
+
+    ui->DeerText->setText(NEWVAL);
+}
+
+
 
 
