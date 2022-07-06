@@ -1,4 +1,4 @@
-#include "predator.h"
+#include "wolf.h"
 #include "hare.h"
 #include "deer.h"
 #include "qgraphicsscene.h"
@@ -11,49 +11,41 @@
 #include <QDateTime>
 #include <QVector2D>
 
-int Predator::newUID = 0;
-
 static int randomBetween(int low, int high, int seed)
 {
     srand(seed);
     return (rand() % ((high + 1) - low) + low);
 }
 
-Predator::Predator(QObject *parent) : QObject(parent)  , uid(newUID++)
+Wolf::Wolf(QObject *parent) : QObject(parent)
 {
-
     hunger = 100;
     hp = 100;
     stamina = 100;
-    predatorTimer = nullptr;
-
+    WolfTimer = nullptr;
 }
 
-Predator::~Predator()
+Wolf::~Wolf()
 {
 
 }
 
-int Predator::GetUid()
-{
-    return uid;
-}
-
-bool Predator::processCollidings(QList<QGraphicsItem *> collidins)
+/*Обнаружение столкновений*/
+bool Wolf::processCollidings(QList<QGraphicsItem *> collidins)
 {
     bool can_eat = false;
       for (QGraphicsItem* item: collidins) {
-          if (dynamic_cast<Hare*> (item)){
-              can_eat = true;
+          if (dynamic_cast<Hare*> (item)){//если объект класса Hare
+              can_eat = true;//можно есть
           }
-          if (dynamic_cast<Deer*> (item)){
-              can_eat = true;
+          if (dynamic_cast<Deer*> (item)){//если объект класса Deer
+              can_eat = true;//можно есть
           }
       }
       return can_eat;
 }
 
-void Predator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Wolf::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
@@ -72,12 +64,12 @@ void Predator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawRect(-2,-8, (int) 22*hp/100,3);
 }
 
-QRectF Predator::boundingRect() const
+QRectF Wolf::boundingRect() const
 {
     return QRectF(-2,-8,22,25);
 }
 
-void Predator::move()
+void Wolf::move()
 {
     /*Рандомные новые координаты*/
     QPointF newPos = QPointF(pos().x() + randomBetween(-15,15,rand()),
@@ -103,89 +95,91 @@ void Predator::move()
         hunger = 0;
 }
 
-void Predator::rest()
+void Wolf::rest()
 {
     if (stamina<100){
-        qDebug() << "Predator with ID = " << GetUid() << " resting";
         stamina += 1;
         hunger -= 0.5;
         if (hunger<=0)
             hunger = 0;
     }
     else{
-        delete predatorTimer;//удаление таймера
-        predatorTimer = nullptr;//присвоить nullptr
+        delete WolfTimer;//удаление таймера
+        WolfTimer = nullptr;//присвоить nullptr
     }
 }
 
-void Predator::get_damage()
+void Wolf::get_damage()
 {
     if(hp>=5)
         hp -= 5;
     else{
         hp = 0;
+        emit wolfDead();
         this->deleteLater();
+
     }
 }
 
-void Predator::eat(QList<QGraphicsItem *> colliding)
+void Wolf::eat(QList<QGraphicsItem *> colliding)
 {
     for (QGraphicsItem* item: colliding) {
-        if (dynamic_cast<Hare*> (item)){
-            hp -=20;
-            if(hp<=0){
-                this->deleteLater();
-                return;
-            }
-            hunger+=20;
+        if (dynamic_cast<Hare*> (item)){//Если наткнулся на зайца
+            hunger+=20; //уменьшил голод
             if(hunger>100)
                hunger = 100;
+            hp += 30;//восстановил здоровье
+            if(hp>100)
+               hp = 100;
 
-            static_cast<Hare*> (item)->deleteLater();
-            qDebug() << "Predator with ID = " << GetUid() << " eat hare";
-            emit hareEaten();
+            static_cast<Hare*> (item)->deleteLater(); //удалил зайца
+            emit hareEaten();//вызвал сигнал заяц съеден
         }
-        if (dynamic_cast<Deer*> (item)){
-            hp -= 40;
-            if(hp<=0){
-                this->deleteLater();
+        if (dynamic_cast<Deer*> (item)){ //если наткнулся на оленя
+            hp -= 40;//получил урон от него
+            if(hp<=0){//если очки здоровья после этого <=0
+                emit wolfDead();//волк умер
+                this->deleteLater();//удалил волка
                 return;
             }
-            hunger += 50;
+            hunger += 50;//если выжил то восстановил голод
             if(hunger>100)
                 hunger = 100;
+            hp += 45; //восстановил здоровьк
+            if(hp>100)
+               hp = 100;
 
-            static_cast<Deer*> (item)->deleteLater();
-            qDebug() << "Predator with ID = " << GetUid() << " eat deer";
-            emit deerEaten();
+            static_cast<Deer*> (item)->deleteLater();//удалил оленя
+            emit deerEaten();//вызвал сигнал олень съеден
         }
     }
 }
 
-void Predator::status()
+void Wolf::status()
 {
-    qDebug() << "Predator ID = " << GetUid() << " status cheack";
+    /*Случайное число от 50 до 85*/
     int random = randomBetween(50,85,rand());
+
+    /*Список объектов с которыми столкнулся*/
     QList<QGraphicsItem *> colliding = scene()->collidingItems(this);
 
-    /*двигаться если стамина больше 50 и хищник не отдыхает*/
-    if(stamina >=random && predatorTimer == nullptr){
-        qDebug() << "Predator with ID = " << GetUid() << " is moving";
+    /*двигаться если стамина больше random и хищник не отдыхает*/
+    if(stamina >=random && WolfTimer == nullptr){
         move();
-
     }
-    /*отдых если стамина меньше 50*/
+
+    /*отдых если стамина меньше random*/
     if(stamina < random){
-        predatorTimer = new QTimer;
-        connect(predatorTimer,SIGNAL(timeout()),this,SLOT(rest()));
-        predatorTimer->start(500);
+        WolfTimer = new QTimer;
+        connect(WolfTimer,SIGNAL(timeout()),this,SLOT(rest()));
+        WolfTimer->start(500);
     }
     /*Если голод падает ниже 10 каждую секунду теряет 5 хп*/
     if(hunger <= 10){
-        qDebug() << "Predator with ID = " << GetUid() << " getting damage";
         get_damage();
     }
 
+    /*Если обнаружил зайца или оленя, то съел их*/
     if (processCollidings(colliding) == true) {
         eat(colliding);
     }

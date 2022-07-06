@@ -9,8 +9,6 @@
 #include <QVector2D>
 #include <QTimer>
 
-int Herbivores::newUID = 0;
-
 static int randomBetween(int low, int high, int seed)
 {
     srand(seed);
@@ -18,12 +16,12 @@ static int randomBetween(int low, int high, int seed)
 }
 
 /*Конструктор по умолчанию*/
-Herbivores::Herbivores(QObject *parent) : QObject(parent)  , uid(newUID++)
+Herbivores::Herbivores(QObject *parent) : QObject(parent)
 {
-
     hunger = 100;
     stamina = 100;
     hp = 100;
+    HerbivoresTimer = nullptr;
 }
 
 /*Деструктор*/
@@ -38,9 +36,10 @@ bool Herbivores::processCollidings(QList<QGraphicsItem *> collidins)
 {
     bool can_eat = false;
       for (QGraphicsItem* item: collidins) {
-        if (dynamic_cast<Grass*> (item)){
-          can_eat = true;
+        if (dynamic_cast<Grass*> (item)){//если наткнулся на объект класса Grass
+          can_eat = true; //можно есть
 
+          /*Запомнить координаты травы*/
           this->lastFood.setX(this->pos().x());
           this->lastFood.setY(this->pos().y());
         }
@@ -48,17 +47,13 @@ bool Herbivores::processCollidings(QList<QGraphicsItem *> collidins)
       return can_eat;
 }
 
-/*Получить ID объекта*/
-int Herbivores::GetUid()
-{
-    return uid;
-}
 
 /*Отрисовка на графической сцене*/
 void Herbivores::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
+
 
     painter->setPen(Qt::NoPen);
 
@@ -80,10 +75,8 @@ QRectF Herbivores::boundingRect() const
 void Herbivores::rest()
 {
     if (stamina<100){
-      //  qDebug() << "Herbivores is resting now, stamina = " << stamina
-         //        << " HP = " << hp << " Hunger = " << hunger;
-        stamina += 1;
-        hunger -= 0.5;
+        stamina += 1;//пока отдыхает восстанавливается выносливость
+        hunger -= 0.5;//растет голод
         if (hunger<=0)
             hunger = 0;
     }
@@ -100,7 +93,6 @@ void Herbivores::get_damage()
         hp -= 5;
     else{
         hp = 0;
-       // qDebug() << "Herbivores ID" << GetUid()<< " is dead.";
         this->deleteLater();
     }
 }
@@ -109,9 +101,9 @@ void Herbivores::get_damage()
 void Herbivores::eat()
 {
     if (hunger < 100){
-        hunger += 20;
-        stamina += 15;
-        hp += 25;
+        hunger += 20;//пока ест голод уменьшается
+        stamina += 15;//восстанавливается выносливость
+        hp += 25;//восстанавливается здоровье
 
         if(hunger>100)
             hunger = 100;
@@ -130,26 +122,26 @@ void Herbivores::eat()
 /*Двигаться к месту последнего приема пищи*/
 void Herbivores::moveForFood()
 {
-    QVector2D v1(pos().x(),pos().y());
-    QVector2D v2(lastFood.x(),lastFood.y());
-    if(v1.distanceToPoint(v2) != 0){
-       //  qDebug() << "Herbivores is moving for food now, stamina = " << stamina
-           //       << " HP = " << hp << " Hunger = " << hunger;
-        if(v1.x()!= v2.x()){
-            if(v2.x()<v1.x())
-                setX(pos().x() - 1);
+    QVector2D v1(pos().x(),pos().y()); //вектор - текущее положение
+    QVector2D v2(lastFood.x(),lastFood.y());//вектор - положение еды
+
+    if(v1.distanceToPoint(v2) != 0){ //проверка расстояния до еды
+
+        if(v1.x()!= v2.x()){ //если по OX не совпадает
+            if(v2.x()<v1.x()) //и еда левее
+                setX(pos().x() - 1);//сместиться влево
             else
-                setX(pos().x() + 1);
+                setX(pos().x() + 1);//иначе сместиться правее
         }
-        if(v1.y()!=v2.y()){
-            if(v2.y()<v1.y())
-                setY(pos().y() - 1);
+        if(v1.y()!=v2.y()){ //если по OY не совпадает
+            if(v2.y()<v1.y())//и еда выше
+                setY(pos().y() - 1);//подняться
             else
-                setY(pos().y() + 1);
+                setY(pos().y() + 1);//иначе опуститься по OY
         }
 
-        stamina -=0.2;
-        hunger -= 0.2;
+        stamina -=0.2;//пока идет к еде теряет очки выносливости
+        hunger -= 0.2;//и очки голода
         if (hunger<=0)
             hunger = 0;
     }
@@ -181,8 +173,8 @@ void Herbivores::move()
 
     //установка новой позиции
     setPos(newPos);
-    stamina -=0.5;
-    hunger -= 0.5;
+    stamina -=0.5;//за шаш выносливость -0,5
+    hunger -= 0.5;//голод -0,5
     if (hunger<=0)
         hunger = 0;
 
@@ -195,37 +187,38 @@ void Herbivores::status(){
 
     /*двигаться если стамина больше 50 и заяц не отдыхает*/
     if(stamina >=random && HerbivoresTimer == nullptr){
-       // qDebug() << "Herbivores is moving now, stamina = " << stamina
-         //        << " HP = " << hp << " Hunger = " << hunger;
         emit move();
-
     }
+
     /*отдых если стамина меньше 50*/
     if(stamina < random){
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(rest()));
         HerbivoresTimer->start(500);
     }
+
     /*Если голод падает ниже 10 каждую секунду теряет 5 хп*/
     if(hunger <= 10){
-       // qDebug() << "Herbivores is getting damage now, hp = "
-         //       << hp << " Hunger = " << hunger;
         emit get_damage();
     }
 
     QList<QGraphicsItem *> colliding = scene()->collidingItems(this);
 
+    /*Если обнаружил объект который можно съесть
+    и голод ниже 50, то съесть этот объект*/
     if (processCollidings(colliding) == true && hunger <=50) {
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(eat()));
         HerbivoresTimer->start(500);
     }
+
+    /*Если голод ниже 50 и объект уже ел когда-то
+    двигаться к этому объекту*/
     if (hunger <=50 && lastFood.isNull() == false){
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(moveForFood()));
         HerbivoresTimer->start(500);
     }
-
 
 
 }

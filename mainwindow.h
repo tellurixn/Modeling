@@ -5,7 +5,7 @@
 #include "grass.h"
 #include "hare.h"
 #include "deer.h"
-#include "predator.h"
+#include "wolf.h"
 #include <vector>
 
 QT_BEGIN_NAMESPACE
@@ -21,16 +21,27 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 public slots:
-    void updateHareText();
-    void updateDeerText();
+    void updateHareText();//обновить кол-во умерших зайцев
+    void updateDeerText();//                        оленей
+    void updateWolfText();//                        волков
+private slots:
+    void on_addGrassButton_clicked();//кнопка добавления травы
+
+    void on_addHareButton_clicked();//кнопка добавления зайца
+
+    void on_addDeerButton_clicked();//кнопка добавления оленя
+
+    void on_addWolfButton_clicked();//кнопка добавления волка
+
 private:
-    Ui::MainWindow *ui;
-    QGraphicsScene *scene; //график сцена
-    QTimer *timer;
-    Grass *grass;//объект класса трава
+    Ui::MainWindow *ui;//интерфейс
+    QGraphicsScene *scene; //графическая сцена
+    QTimer *timer;//таймер сцены
+    std::vector <Grass*> grass;;//объект класса трава
     std::vector <Hare*> hares; //вектор объектов класса заяц
-    std::vector <Deer*> deers; //вектор объектов класса заяц
-    std::vector <Predator*> wolfs; //вектор объектов класса заяц
+    std::vector <Deer*> deers; //вектор объектов класса олень
+    std::vector <Wolf*> wolfs; //вектор объектов класса волк
+
 
 
 };

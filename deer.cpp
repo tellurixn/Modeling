@@ -1,5 +1,7 @@
 #include "deer.h"
-#include "predator.h"
+#include "mainwindow.h"
+#include "qgraphicsscene.h"
+#include "wolf.h"
 
 Deer::Deer()
 {
@@ -16,6 +18,7 @@ void Deer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    /*Отрисовка оленя*/
     painter->setPen(Qt::NoPen);
 
     painter->setBrush(QColor(186,135,89));
@@ -39,8 +42,10 @@ QRectF Deer::boundingRect() const
 /*Возращение формы - эллипса*/
 QPainterPath Deer::shape() const
 {
-    /*Функция возращает форму в виде эллипса*/
+
     QPainterPath path;
     path.addEllipse(boundingRect());
     return path;
 }
+
+

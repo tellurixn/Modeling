@@ -14,7 +14,7 @@
    <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
-   <string>ALI</string>
+   <string>Animal's Life Model</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow
@@ -30,26 +30,6 @@
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>320</y>
-      <width>151</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Consolas</family>
-      <pointsize>10</pointsize>
-      <italic>true</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Условные обозначения:</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
@@ -97,16 +77,14 @@
      </palette>
     </property>
     <property name="styleSheet">
-     <string notr="true">QGraphicsView{
-rgb(17, 67, 11)
-}</string>
+     <string notr="true"/>
     </property>
     <property name="backgroundBrush">
-     <brush brushstyle="NoBrush">
+     <brush brushstyle="SolidPattern">
       <color alpha="255">
-       <red>8</red>
-       <green>57</green>
-       <blue>7</blue>
+       <red>119</red>
+       <green>221</green>
+       <blue>119</blue>
       </color>
      </brush>
     </property>
@@ -114,15 +92,15 @@ rgb(17, 67, 11)
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>20</x>
       <y>320</y>
-      <width>142</width>
-      <height>106</height>
+      <width>181</width>
+      <height>108</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label">
        <property name="font">
         <font>
          <family>Consolas</family>
@@ -131,119 +109,231 @@ rgb(17, 67, 11)
         </font>
        </property>
        <property name="text">
-        <string>Коричневый - Медведь</string>
+        <string>Условные обозначения:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_5">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Зеленый - Трава</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Серый - Волк</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Белый - Заяц</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Оранжевый - Олень</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>320</y>
+      <width>511</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0" rowspan="2">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+           <italic>false</italic>
+          </font>
+         </property>
+         <property name="text">
+          <string>Съедено/погибло от голода оленей:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Съедено/погибло от голода зайцев:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Волков погибло:</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1" rowspan="2">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="DeerText">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="HareText">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="WolfText">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="addGrassButton">
        <property name="font">
         <font>
          <family>Consolas</family>
-         <pointsize>10</pointsize>
-         <italic>true</italic>
+         <pointsize>9</pointsize>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
-        <string>Оранжевый - Олень</string>
+        <string>Добавить траву</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="label_4">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="addHareButton">
        <property name="font">
         <font>
          <family>Consolas</family>
-         <pointsize>10</pointsize>
-         <italic>true</italic>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
-        <string>Белый - Заяц</string>
+        <string>Добавить зайца</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="label_3">
+     <item row="1" column="2">
+      <widget class="QPushButton" name="addDeerButton">
        <property name="font">
         <font>
          <family>Consolas</family>
-         <pointsize>10</pointsize>
-         <italic>true</italic>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
-        <string>Серый - Волк</string>
+        <string>Добавить оленя</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="label_6">
+     <item row="1" column="3">
+      <widget class="QPushButton" name="addWolfButton">
        <property name="font">
         <font>
          <family>Consolas</family>
-         <pointsize>10</pointsize>
-         <italic>true</italic>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
-        <string>Зеленый - Трава</string>
+        <string>Добавить волка</string>
        </property>
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>320</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Съедено оленей:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="DeerText">
-    <property name="geometry">
-     <rect>
-      <x>710</x>
-      <y>320</y>
-      <width>16</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>340</y>
-      <width>101</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Съедено зайцев:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="HareText">
-    <property name="geometry">
-     <rect>
-      <x>710</x>
-      <y>340</y>
-      <width>16</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
    </widget>
   </widget>
  </widget>

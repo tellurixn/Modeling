@@ -1,6 +1,5 @@
 #include "hare.h"
 
-
 Hare::Hare()
 {
 
@@ -11,11 +10,13 @@ Hare::~Hare()
 
 }
 
+/*Отрисовка объекта*/
 void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    /*Отрисовка зайца*/
     painter->setPen(Qt::NoPen);
 
     painter->setBrush(QColor(Qt::white));
@@ -31,6 +32,7 @@ void Hare::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 }
 
+/*Возврат прямоугольника в котором находится заяц*/
 QRectF Hare::boundingRect() const
 {
     return QRectF(-2,-5,14,15);
@@ -39,7 +41,6 @@ QRectF Hare::boundingRect() const
 /*Возращение формы - эллипса*/
 QPainterPath Hare::shape() const
 {
-    /*Функция возращает форму в виде эллипса*/
     QPainterPath path;
     path.addEllipse(boundingRect());
     return path;

@@ -11,14 +11,12 @@ class Grass : public QObject, public QGraphicsItem{
     Q_INTERFACES(QGraphicsItem)
 public:
     Grass();
-
- protected:
+    ~Grass();
+protected:
     /*Отрисовка элемента*/
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
-private:
-    int amount;
     QPainterPath shape() const override;
 };
 

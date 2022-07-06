@@ -3,19 +3,19 @@
 #include <cstdlib>
 #include <ctime>
 
-Grass::Grass() :  QGraphicsItem(){
+Grass::Grass() :  QGraphicsItem()
+{
 
-    /*Если трава появилась впервые, кол-во = 1*/
-    if(amount == NULL){
-        amount = 1;
-    }
-    else{
-        amount++;
-    }
+}
+
+Grass::~Grass()
+{
+
 }
 
 void Grass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    /*Отрисовка объекта трава*/
     Q_UNUSED(option)
     Q_UNUSED(widget)
     painter->setPen(Qt::NoPen);
@@ -27,11 +27,13 @@ void Grass::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 QRectF Grass::boundingRect() const
 {
+    /*Возврат прямоугольника-области объекта*/
     return QRectF(0,0,50,30);
 }
 
 QPainterPath Grass::shape() const
 {
+    /*Возврат эллипса-области объекта*/
     QPainterPath path;
     path.addEllipse(boundingRect());
     return path;

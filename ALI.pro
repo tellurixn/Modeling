@@ -15,7 +15,7 @@ SOURCES += \
     herbivores.cpp \
     main.cpp \
     mainwindow.cpp \
-    predator.cpp
+    wolf.cpp
 
 HEADERS += \
     deer.h \
@@ -23,7 +23,7 @@ HEADERS += \
     hare.h \
     herbivores.h \
     mainwindow.h \
-    predator.h
+    wolf.h
 
 FORMS += \
     mainwindow.ui

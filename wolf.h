@@ -1,45 +1,39 @@
-#ifndef PREDATOR_H
-#define PREDATOR_H
+#ifndef WOLF_H
+#define WOLF_H
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QObject>
 
-class Predator : public QObject, public QGraphicsItem
+class Wolf : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    explicit Predator(QObject *parent = 0);
-    ~Predator();
+    explicit Wolf(QObject *parent = 0);
+    ~Wolf();
     bool processCollidings(QList<QGraphicsItem *> collidins);
-
-    double hunger;//голод
-    double stamina;//выносливость
-    int hp;
-
-    QTimer *predatorTimer;
-
-    int GetUid();
-
-    static int newUID;
-    const int uid;
-
-protected:
-    /*Отрисовка элемента*/
-    void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
-    /*Возращение прямоугольника, в котором находится элемент*/
-    QRectF boundingRect() const override;
-signals:
-    void deerEaten();
-    void hareEaten();
 public slots:
     void move();
     void rest();
     void get_damage();
     void eat(QList<QGraphicsItem *> colliding);
     void status();
+private:
+    double hunger;//голод
+    double stamina;//выносливость
+    int hp;//очки здоровья
+    QTimer *WolfTimer;//таймер
+protected:
+    /*Отрисовка элемента*/
+    void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
+    /*Возращение прямоугольника, в котором находится элемент*/
+    QRectF boundingRect() const override;
+signals:
+    void deerEaten();//олень съеден
+    void hareEaten();//заяц съеден
+    void wolfDead();//волк мертв
 };
 
-#endif // PREDATOR_H
+#endif // WOLF_H
