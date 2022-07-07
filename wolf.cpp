@@ -23,6 +23,10 @@ Wolf::Wolf(QObject *parent) : QObject(parent)
     hp = 100;
     stamina = 100;
     WolfTimer = nullptr;
+
+    /*Берем рандомную точку на сцене*/
+    newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
+    qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
 }
 
 Wolf::~Wolf()
@@ -69,37 +73,59 @@ QRectF Wolf::boundingRect() const
     return QRectF(-2,-8,22,25);
 }
 
+QPainterPath Wolf::shape() const
+{
+    QPainterPath path;
+    path.addEllipse(0,0,17,17);
+    return path;
+}
+
 void Wolf::move()
 {
-    /*Рандомные новые координаты*/
-    QPointF newPos = QPointF(pos().x() + randomBetween(-15,15,rand()),
-                             pos().y() + randomBetween(-15,15,rand()));
+    /*К выбранной рандомной точке прокладывается прямая
+    движение происходит по уравнению прямой через 2 точки*/
 
-    /*Ограничение по координатам
-    для предотвращения выхода за границы*/
-    if(pos().x()>=650 || pos().y()>=280){
-        newPos.setX(pos().x() - 15);
-        newPos.setY(pos().y() - 15);
+    //если еще не сместился на другой конец прямой
+    if(pos().x() != newPosition.x() && pos().y()!= newPosition.y()){
 
+    if(newPosition.x() < pos().x()){ //если точка левее уменьшаем x на 1 каждый шаг
+        int oldX = pos().x(),//старые
+            oldY = pos().y();//координаты
+
+        int newX = oldX - 1,//новый икс
+           //новый игрек
+           newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
+
+        setPos(newX,newY);
     }
-    else if(pos().x()<=30 || pos().y()<=10){
-        newPos.setX(pos().x() + 15);
-        newPos.setY(pos().y() + 15);
+    else{ //если точка правее прибавляем к иксу единицу каждый шаг
+        int oldX = pos().x(),//старые
+               oldY = pos().y();//координаты
+
+        int newX = oldX + 1,//новый икс
+               //новый игрек
+               newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
+
+        setPos(newX,newY);
+        }
+    }
+    else{
+        //новая точка выбирается когда закончил передвижение по предыдущей прямой
+        newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
     }
 
-    //установка новой позиции
-    setPos(newPos);
-    stamina -=0.5;
-    hunger -= 0.5;
+    stamina -=0.25;//за шаш выносливость -0,25
+    hunger -= 0.25;//голод -0,25
     if (hunger<=0)
         hunger = 0;
+
 }
 
 void Wolf::rest()
 {
     if (stamina<100){
         stamina += 1;
-        hunger -= 0.5;
+        hunger -= 0.25;
         if (hunger<=0)
             hunger = 0;
     }
@@ -111,8 +137,8 @@ void Wolf::rest()
 
 void Wolf::get_damage()
 {
-    if(hp>=5)
-        hp -= 5;
+    if(hp>=2)
+        hp -= 2;
     else{
         hp = 0;
         emit wolfDead();
@@ -172,7 +198,7 @@ void Wolf::status()
     if(stamina < random){
         WolfTimer = new QTimer;
         connect(WolfTimer,SIGNAL(timeout()),this,SLOT(rest()));
-        WolfTimer->start(500);
+        WolfTimer->start(250);
     }
     /*Если голод падает ниже 10 каждую секунду теряет 5 хп*/
     if(hunger <= 10){

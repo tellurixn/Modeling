@@ -42,6 +42,6 @@ QRectF Hare::boundingRect() const
 QPainterPath Hare::shape() const
 {
     QPainterPath path;
-    path.addEllipse(boundingRect());
+    path.addEllipse(0,0,10,10);
     return path;
 }

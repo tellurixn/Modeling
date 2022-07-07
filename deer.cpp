@@ -44,7 +44,7 @@ QPainterPath Deer::shape() const
 {
 
     QPainterPath path;
-    path.addEllipse(boundingRect());
+    path.addEllipse(0,0,15,15);
     return path;
 }
 

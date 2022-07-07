@@ -25,11 +25,13 @@ private:
     double stamina;//выносливость
     int hp;//очки здоровья
     QTimer *WolfTimer;//таймер
+    QPoint newPosition;//новая позиция на сцене
 protected:
     /*Отрисовка элемента*/
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
+    QPainterPath shape() const override;
 signals:
     void deerEaten();//олень съеден
     void hareEaten();//заяц съеден

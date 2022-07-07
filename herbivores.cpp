@@ -22,6 +22,10 @@ Herbivores::Herbivores(QObject *parent) : QObject(parent)
     stamina = 100;
     hp = 100;
     HerbivoresTimer = nullptr;
+
+    /*Берем рандомную точку на сцене*/
+    newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
+    qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
 }
 
 /*Деструктор*/
@@ -70,13 +74,12 @@ QRectF Herbivores::boundingRect() const
     return QRectF(0,0,20,20);
 }
 
-
 /*Покоиться*/
 void Herbivores::rest()
 {
     if (stamina<100){
         stamina += 1;//пока отдыхает восстанавливается выносливость
-        hunger -= 0.5;//растет голод
+        hunger -= 0.25;//растет голод
         if (hunger<=0)
             hunger = 0;
     }
@@ -89,8 +92,8 @@ void Herbivores::rest()
 /*Получать урон*/
 void Herbivores::get_damage()
 {
-    if(hp>=5)
-        hp -= 5;
+    if(hp>=2)
+        hp -= 2;
     else{
         hp = 0;
         this->deleteLater();
@@ -102,7 +105,7 @@ void Herbivores::eat()
 {
     if (hunger < 100){
         hunger += 20;//пока ест голод уменьшается
-        stamina += 15;//восстанавливается выносливость
+        stamina += 10;//восстанавливается выносливость
         hp += 25;//восстанавливается здоровье
 
         if(hunger>100)
@@ -154,27 +157,40 @@ void Herbivores::moveForFood()
 /*Передвигаться(рандомно)*/
 void Herbivores::move()
 {
+    /*К выбранной рандомной точке прокладывается прямая
+    движение происходит по уравнению прямой через 2 точки*/
 
-    /*Рандомные новые координаты*/
-    QPointF newPos = QPointF(pos().x() + randomBetween(-10,10,rand()),
-                             pos().y() + randomBetween(-10,10,rand()));
+    //если еще не сместился на другой конец прямой
+    if(pos().x() != newPosition.x() && pos().y()!= newPosition.y()){
 
-    /*Ограничение по координатам
-    для предотвращения выхода за границы*/
-    if(pos().x()>=650 || pos().y()>=280){
-        newPos.setX(pos().x() - 15);
-        newPos.setY(pos().y() - 15);
+    if(newPosition.x() < pos().x()){ //если точка левее уменьшаем x на 1 каждый шаг
+        int oldX = pos().x(),//старые
+            oldY = pos().y();//координаты
 
+        int newX = oldX - 1,//новый икс
+           //новый игрек
+           newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
+
+        setPos(newX,newY);
     }
-    else if(pos().x()<=30 || pos().y()<=10){
-        newPos.setX(pos().x() + 15);
-        newPos.setY(pos().y() + 15);
+    else{ //если точка правее прибавляем к иксу единицу каждый шаг
+        int oldX = pos().x(),//старые
+               oldY = pos().y();//координаты
+
+        int newX = oldX + 1,//новый икс
+               //новый игрек
+               newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
+
+        setPos(newX,newY);
+        }
+    }
+    else{
+        //новая точка выбирается когда закончил передвижение по предыдущей прямой
+        newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
     }
 
-    //установка новой позиции
-    setPos(newPos);
-    stamina -=0.5;//за шаш выносливость -0,5
-    hunger -= 0.5;//голод -0,5
+    stamina -=0.25;//за шаш выносливость -0.25
+    hunger -= 0.25;//голод -0.25
     if (hunger<=0)
         hunger = 0;
 
@@ -194,7 +210,7 @@ void Herbivores::status(){
     if(stamina < random){
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(rest()));
-        HerbivoresTimer->start(500);
+        HerbivoresTimer->start(250);
     }
 
     /*Если голод падает ниже 10 каждую секунду теряет 5 хп*/
@@ -209,7 +225,7 @@ void Herbivores::status(){
     if (processCollidings(colliding) == true && hunger <=50) {
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(eat()));
-        HerbivoresTimer->start(500);
+        HerbivoresTimer->start(250);
     }
 
     /*Если голод ниже 50 и объект уже ел когда-то
@@ -217,7 +233,7 @@ void Herbivores::status(){
     if (hunger <=50 && lastFood.isNull() == false){
         HerbivoresTimer = new QTimer;
         connect(HerbivoresTimer,SIGNAL(timeout()),this,SLOT(moveForFood()));
-        HerbivoresTimer->start(500);
+        HerbivoresTimer->start(250);
     }
 
 

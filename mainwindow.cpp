@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     timer = new QTimer;
 
     //Добавление травы на сцену
-    for(int i = 0; i<25;i++){
+    for(int i = 0; i<45;i++){
     auto newGrass = new Grass();
     grass.push_back(newGrass);
 
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     hares.push_back(newHare);
 
     hares[i]->setPos(randomBetween(30,650,rand())
-                 ,randomBetween(10,250,rand()));
+                    ,randomBetween(10,250,rand()));
 
     scene->addItem(hares[i]);
 
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     //Запуск таймера
-    timer->start(500);
+    timer->start(250);
 
 }
 
