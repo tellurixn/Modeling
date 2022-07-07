@@ -115,8 +115,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(wolfs[i],SIGNAL(wolfDead()),this,SLOT(updateWolfText()));
     }
 
-    //Запуск таймера
-    timer->start(250);
+//   Запуск таймера
+//    timer->start(250);
 
 }
 
@@ -213,5 +213,18 @@ void MainWindow::on_addWolfButton_clicked()
     connect(wolfs[last],SIGNAL(hareEaten()),this,SLOT(updateHareText()));
     connect(wolfs[last],SIGNAL(deerEaten()),this,SLOT(updateDeerText()));
     connect(wolfs[last],SIGNAL(wolfDead()),this,SLOT(updateWolfText()));
+}
+
+
+void MainWindow::on_Play_clicked()
+{
+    //Запуск таймера
+    timer->start(250);
+}
+
+
+void MainWindow::on_Pause_clicked()
+{
+    timer->stop();
 }
 

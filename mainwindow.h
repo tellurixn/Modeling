@@ -33,6 +33,10 @@ private slots:
 
     void on_addWolfButton_clicked();//кнопка добавления волка
 
+    void on_Play_clicked();
+
+    void on_Pause_clicked();
+
 private:
     Ui::MainWindow *ui;//интерфейс
     QGraphicsScene *scene; //графическая сцена
