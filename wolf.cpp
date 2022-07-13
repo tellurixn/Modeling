@@ -26,7 +26,7 @@ Wolf::Wolf(QObject *parent) : QObject(parent)
 
     /*Берем рандомную точку на сцене*/
     newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
-    qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
+   // qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
 }
 
 Wolf::~Wolf()

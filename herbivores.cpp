@@ -24,8 +24,8 @@ Herbivores::Herbivores(QObject *parent) : QObject(parent)
     HerbivoresTimer = nullptr;
 
     /*Берем рандомную точку на сцене*/
-    newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
-    qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
+    newPosition = QPointF(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
+   // qDebug() << "Construcror's  newPos = (" << newPosition.x() << ", "<< newPosition.y() <<")";
 }
 
 /*Деструктор*/
@@ -164,20 +164,20 @@ void Herbivores::move()
     if(pos().x() != newPosition.x() && pos().y()!= newPosition.y()){
 
     if(newPosition.x() < pos().x()){ //если точка левее уменьшаем x на 1 каждый шаг
-        int oldX = pos().x(),//старые
+        double oldX = pos().x(),//старые
             oldY = pos().y();//координаты
 
-        int newX = oldX - 1,//новый икс
+        double newX = oldX - 1,//новый икс
            //новый игрек
            newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
 
         setPos(newX,newY);
     }
     else{ //если точка правее прибавляем к иксу единицу каждый шаг
-        int oldX = pos().x(),//старые
+        double oldX = pos().x(),//старые
                oldY = pos().y();//координаты
 
-        int newX = oldX + 1,//новый икс
+        double newX = oldX + 1,//новый икс
                //новый игрек
                newY = ((newX - oldX)*(newPosition.y()-oldY))/(newPosition.x() - oldX) + oldY;
 
@@ -186,7 +186,7 @@ void Herbivores::move()
     }
     else{
         //новая точка выбирается когда закончил передвижение по предыдущей прямой
-        newPosition = QPoint(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
+        newPosition = QPointF(randomBetween(30,650,rand()),randomBetween(10,250,rand()));
     }
 
     stamina -=0.25;//за шаш выносливость -0.25

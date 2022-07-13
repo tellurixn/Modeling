@@ -8,14 +8,14 @@ class Hare : public Herbivores
 public:
     Hare();
     ~Hare();
-
+    QPainterPath shape() const override;
 protected:
     /*Отрисовка элемента*/
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
     /*Возращение эллипса, в котором находится элемент*/
-    QPainterPath shape() const override;
+
 };
 
 #endif // HARE_H

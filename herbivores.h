@@ -22,7 +22,7 @@ public:
     int hp;//очки здоровья
     QPoint lastFood;//координаты последнего приема пищи
     QTimer *HerbivoresTimer;//таймер объекта
-    QPoint newPosition;//новая позиция на сцене
+    QPointF newPosition;//новая позиция на сцене
 public slots:
     void move(); //функция движения
     void rest(); //функция отдыха

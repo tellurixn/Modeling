@@ -14,6 +14,7 @@ public:
     explicit Wolf(QObject *parent = 0);
     ~Wolf();
     bool processCollidings(QList<QGraphicsItem *> collidins);
+    QPainterPath shape() const override;
 public slots:
     void move();
     void rest();
@@ -31,7 +32,7 @@ protected:
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget = nullptr) override;
     /*Возращение прямоугольника, в котором находится элемент*/
     QRectF boundingRect() const override;
-    QPainterPath shape() const override;
+
 signals:
     void deerEaten();//олень съеден
     void hareEaten();//заяц съеден

@@ -115,8 +115,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(wolfs[i],SIGNAL(wolfDead()),this,SLOT(updateWolfText()));
     }
 
-//   Запуск таймера
-//    timer->start(250);
 
 }
 
